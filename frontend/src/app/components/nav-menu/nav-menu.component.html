@@ -3,11 +3,11 @@
         <div class="container">
             <a class="navbar-brand" [routerLink]="['/']" *ngIf="currentUser && !isTeacher">SQL Trainer</a>
             <a class="navbar-brand" [routerLink]="['/teacher']" *ngIf="currentUser && isTeacher">SQL Trainer</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-label="Toggle navigation" [attr.aria-expanded]="isExpanded" (click)="toggle()">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-label="Toggle navigation" [attr.aria-expanded]="isExpanded" (click)="toggle()">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex" [ngClass]="{ show: isExpanded }">
-                <ul class="navbar-nav flex-grow me-auto">
+                <ul class="navbar-nav flex-grow-1 me-auto">
                     <li class="nav-item" [routerLinkActive]="['link-active']" *ngIf="currentUser">
                     </li>
                 </ul>
