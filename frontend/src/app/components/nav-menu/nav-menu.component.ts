@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { User, Role } from '../../models/user';
 import { AuthenticationService } from '../../services/authentication.service';
 import { Router } from '@angular/router';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
     selector: 'app-nav-menu',
+    standalone: true,
     templateUrl: './nav-menu.component.html',
-    imports: [RouterLink,RouterLinkActive,CommonModule],
+    imports: [CommonModule, RouterLink, RouterLinkActive],
     styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent {

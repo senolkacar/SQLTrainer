@@ -1,33 +1,39 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { ReactiveFormsModule, FormBuilder, FormGroup, FormControl, Validators, FormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { FormBuilder, FormGroup,Validators,FormControl,ReactiveFormsModule } from "@angular/forms";
+import { Router, ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
-import { ActivatedRoute, Router } from "@angular/router";
-import { NgModule } from '@angular/core';
-import { Quiz } from "../../models/quiz";
-import { QuizService } from "../../services/quiz.service";
-import { plainToClass, plainToInstance } from "class-transformer";
+import { DialogComponent } from '../dialog/dialog.component';
+import { MaterialModule } from '../../modules/material.module';
 import * as _ from 'lodash-es';
-import { Database } from "../../models/database";
-import { DatabaseService } from "../../services/database.service";
-import { Question, Solution } from "../../models/question";
-import { QuestionService } from "../../services/question.service";
-import { MatDialog } from "@angular/material/dialog";
-import { DialogComponent } from "../dialog/dialog.component";
-import { MatFormFieldModule } from "@angular/material/form-field";
-import { MatButtonModule } from "@angular/material/button";
-import { MatSelectModule } from "@angular/material/select";
-import { MatDatepickerModule } from "@angular/material/datepicker";
-import { MatRadioButton } from "@angular/material/radio";
-import { MatIcon } from "@angular/material/icon";
-import { MatAccordion } from "@angular/material/expansion";
-import { MatExpansionModule } from "@angular/material/expansion";
-import { FormsModule } from "@angular/forms";
-import { MatSlideToggle } from "@angular/material/slide-toggle";
+import { plainToClass } from 'class-transformer';
+
+// Import your models and services
+import { Quiz } from '../../models/quiz';
+import { Question } from '../../models/question';
+import { Database } from '../../models/database';
+import { QuizService } from '../../services/quiz.service';
+import { DatabaseService } from '../../services/database.service';
+import { QuestionService } from '../../services/question.service';
+
+// Define Solution type as a class
+class Solution {
+  order?: number;
+  sql?: string;
+  // Add other properties as needed
+}
 
 @Component({
     selector: 'app-quiz-edition',
-    imports: [CodeEditorComponent, ReactiveFormsModule, MatFormFieldModule,MatButtonModule,MatSelectModule,MatDatepickerModule,MatRadioButton,MatIcon,MatAccordion,MatExpansionModule,MatSlideToggle,CommonModule,FormsModule],
+    standalone: true,
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule, // Add this for [(ngModel)]
+        CodeEditorComponent,
+        MaterialModule
+    ],
     templateUrl: './quiz-edition.component.html'
 })
 export class QuizEditionComponent implements OnInit{
@@ -408,7 +414,7 @@ export class QuizEditionComponent implements OnInit{
     }
 
     quizNameUsed(initialValue : string):any{
-        let timeout: NodeJS.Timeout;
+        let timeout: any; // Changed from NodeJS.Timeout
         let previousValue = initialValue;
         return (ctl: FormControl) => {
             clearTimeout(timeout);

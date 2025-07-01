@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
-import { ActivatedRoute,Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Answer, Question } from '../../models/question';
 import { Query } from '../../models/query';
 import { QuizStateService } from '../../services/quiz-state.service';
@@ -11,13 +12,17 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTableState } from '../../helpers/mattable.state';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
-import { MatIcon } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
-import { FormsModule } from '@angular/forms';
+import { MaterialModule } from '../../modules/material.module';
 
 @Component({
     selector: 'app-question',
-    imports: [CodeEditorComponent, MatIcon,CommonModule,MatTableModule,FormsModule],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        CodeEditorComponent,
+        MaterialModule
+    ],
     templateUrl: './question.component.html'
 })
 export class QuestionComponent implements OnInit {

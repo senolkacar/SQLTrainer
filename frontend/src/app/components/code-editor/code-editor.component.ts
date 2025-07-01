@@ -10,6 +10,7 @@ import { Observable } from "rxjs";
 
 @Component({
     selector: "code-editor",
+    standalone: true,
     imports: [CommonModule, FormsModule],
     template: `
     <form #codeForm="ngForm">
