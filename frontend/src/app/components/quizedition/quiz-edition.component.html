@@ -1,0 +1,128 @@
+<form [formGroup]="quizForm" novalidate>
+<div class="d-flex justify-content-between">
+<div class="d-flex align-items-center">
+<p class>Nom</p>
+<mat-form-field>
+    <input matInput [formControl]="ctlQuizName" required>
+    <mat-error class="field-error" *ngIf="ctlQuizName.hasError('required')">Required</mat-error>
+    <mat-error class="field-error" *ngIf="ctlQuizName.hasError('minlength')">Should contains more than 3 characters</mat-error>
+</mat-form-field>
+</div>
+    <mat-form-field>
+      <mat-label>Base de données</mat-label>
+      <mat-select [formControl]="ctlDatabase" required>
+        <mat-option *ngFor="let database of databases" [value]="database.id">
+            {{database.name}}
+        </mat-option>
+      </mat-select>
+    <mat-error class="field-error" *ngIf="ctlDatabase.hasError('required')">Required</mat-error>
+    </mat-form-field>
+    <mat-slide-toggle [formControl]="ctlPublished" [checked]="ctlPublished.value">Publié</mat-slide-toggle>
+</div>
+<div class="d-flex align-items-center" >
+    <p>Description</p>
+    <mat-form-field>
+        <input matInput [formControl]="ctlDescription">
+    </mat-form-field>
+</div>
+<div class="d-flex justify-content-between">
+   <div class="d-flex align-items-center">
+    <p>Type de quiz</p>
+    <mat-radio-group [formControl]="ctlQuizType">
+        <mat-radio-button [value]="false" [checked]="ctlQuizType.value === false">Training</mat-radio-button>
+        <mat-radio-button  [value]="true" [checked]="ctlQuizType.value === true">Test</mat-radio-button>
+    </mat-radio-group>
+    </div>
+<ng-container *ngIf="ctlQuizType.value === true">
+<mat-form-field>
+    <mat-label>Date début</mat-label>
+    <input matInput [matDatepicker]="dateDebut" [formControl]="ctlStartDate">
+    <mat-hint>DD/MM/YYYY</mat-hint>
+    <mat-error class="field-error" *ngIf="ctlStartDate.hasError('required')">Required</mat-error>
+    <mat-error class="field-error" *ngIf="ctlStartDate.hasError('startDateAfterEndDate')">Start Date cannot be after and date</mat-error>
+    <mat-datepicker-toggle matIconSuffix [for]="dateDebut"></mat-datepicker-toggle>
+    <mat-datepicker #dateDebut></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field>
+    <mat-label>Date fin</mat-label>
+    <input matInput [matDatepicker]="dateFin" [formControl]="ctlEndDate">
+    <mat-hint>DD/MM/YYYY</mat-hint>
+    <mat-error class="field-error" *ngIf="ctlEndDate.hasError('required')">Required</mat-error>
+    <mat-error class="field-error" *ngIf="ctlEndDate.hasError('endDateBeforeStartDate')">End date cannot be before start date</mat-error>
+    <mat-datepicker-toggle matIconSuffix [for]="dateFin"></mat-datepicker-toggle>
+    <mat-datepicker #dateFin></mat-datepicker>
+</mat-form-field>
+</ng-container>
+<div>
+<ng-container>
+    <button type="submit" mat-button form="quizForm" (click)="update()" [disabled]="quizForm.invalid || getQuestionsErrors().length > 0 ">
+        <mat-icon>save</mat-icon>
+    </button>
+</ng-container>
+<ng-container>
+    <button type="delete" mat-button (click)="delete(quiz)" [disabled]="!canDelete">
+        <mat-icon>delete</mat-icon>
+    </button>
+</ng-container>
+</div>
+</div>
+</form>
+<div>
+    <p class="text-danger text-end">{{getQuestionsErrors()}}</p>
+    <p>Questions</p>
+    <div>
+        <mat-accordion>
+            <mat-expansion-panel *ngFor="let q of questions; index as i"  (opened)="panelStates[i] = true" (closed)="panelStates[i] = false">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <ng-container *ngIf="panelStates[i]; else falseBlock">
+                    {{'Question ' + (i + 1)}}
+                  </ng-container>
+                  <ng-template #falseBlock>
+                    {{q.body ? (i + 1) + '. ' + q.body : 'Question ' + (i + 1)}}
+                  </ng-template>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <ng-container *ngIf="canEdit"><button mat-button (click)="moveQuestionUp(q)" [disabled]="hasQuestionBefore(q)">&#9650;</button></ng-container>
+              <ng-container *ngIf="canEdit"><button mat-button (click)="moveQuestionDown(q)" [disabled]="hasQuestionAfter(q)">&#9660;</button></ng-container>
+              <ng-container *ngIf="canEdit"><button type="delete" mat-button (click)="deleteQuestion(q)">
+                <mat-icon>delete</mat-icon>
+              </button></ng-container>
+              <p>Intitulé</p>
+            <mat-form-field style="width: 100%">
+                <mat-label></mat-label>
+                <textarea matInput class="text-primary" [(ngModel)]="q.body" [disabled]="!canEdit">{{q.body}}</textarea>
+            </mat-form-field>
+            <div *ngFor="let solution of q.solutions">
+                <div class="row">
+                <div class="col-md-1 d-flex flex-column align-items-center justify-content-center">
+                <ng-container *ngIf="canEdit"><button mat-button (click)="moveSolutionUp(solution,q)" [disabled]="hasSolutionBefore(solution,q)">&#9650;</button></ng-container>
+                <ng-container *ngIf="canEdit"><button mat-button (click)="moveSolutionDown(solution,q)" [disabled]="hasSolutionAfter(solution,q)">&#9660;</button></ng-container>
+                </div>
+                <div class="col-md-10">
+                  <code-editor #editor [(ngModel)]="solution.sql" [readOnly]="!canEdit" [dbName]="db"></code-editor>
+                </div>
+                <div class="col-md-1 d-flex align-items-center justify-content-end">
+                  <ng-container *ngIf="canEdit"><button type="delete" mat-button (click)="deleteSolution(solution,q)">
+                    <mat-icon>delete</mat-icon>
+                  </button></ng-container>
+                </div>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end">
+                <ng-container *ngIf="canEdit"><button mat-button (click)="addSolution(q)">
+                    <mat-icon>add</mat-icon>
+                </button></ng-container>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+        <div class="col-sm-12 d-flex justify-content-end">
+        <ng-container>
+          <ng-container *ngIf="canEdit"><button mat-button (click)="addQuestion()">
+            <mat-icon>add</mat-icon>
+        </button></ng-container>
+        </ng-container>
+        </div>
+    </div>
+</div>

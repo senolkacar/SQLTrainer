@@ -1,0 +1,100 @@
+<div class="mx-auto">
+<div class="d-flex justify-content-between">
+<div>
+<ng-container><button mat-icon-button (click)="navigateToPreviousQuestion()" [disabled]="isAtMinQuestion()">
+    <mat-icon>&#9664;</mat-icon>
+    </button>
+</ng-container>
+<ng-container><button mat-icon-button (click)="navigateToNextQuestion()" [disabled]="isAtMaxQuestion()">
+    <mat-icon>&#9658;</mat-icon>
+    </button>
+</ng-container>
+</div>
+<div *ngIf="question">
+<h2>{{ question.quiz?.name }} - Exercice {{ question.order }}</h2>
+</div>
+<ng-container><button mat-icon-button (click)="closeQuiz()" [disabled]="closeDisabled">
+    <mat-icon>close</mat-icon>
+    </button>
+</ng-container>
+</div>
+
+<div *ngIf="question">
+    <ng-container><p class="text-info h5">{{ question.body }}</p></ng-container>
+</div>
+<div>
+    <p>Votre requête:<ng-container *ngIf="!question?.hasAnswer">(pas encore répondu)</ng-container> </p>
+</div>
+<code-editor #editor [(ngModel)]="query" [dbName]="dbName"></code-editor>
+
+<div class="d-flex">
+    <div class="pe-2">
+    <ng-container *ngIf="sendButtonVisibility">
+        <button mat-raised-button (click)="evaluate()" [disabled]="!canSendQuery()">Envoyer</button>
+    </ng-container>
+    </div>
+    <div class="pe-2">
+    <ng-container *ngIf="resetButtonVisibility">
+        <button mat-raised-button (click)="reset()">Effacer</button>
+    </ng-container>
+    </div>
+    <div>
+    <ng-container *ngIf="solutionButtonVisibility">
+        <button mat-raised-button (click)="setSolutionVisible()">Voir Solutions</button>
+    </ng-container>
+    </div>
+</div>
+
+<div>
+
+    <ng-container *ngIf="question?.hasAnswer && dateVisibility">
+        <p class *ngIf="question?.answer?.timestamp">{{answer.timestampAsString}}</p>
+    </ng-container>
+<ng-container *ngIf="showResultMessage && question?.query">
+        <div *ngIf="question.query?.errors?.length === 0; else errorBlock">
+            <p class="text-success">Votre requête a retourné une réponse correcte!</p>
+            <p class="text-success">Néanmoins, comparez votre solution avec celle(s) ci-dessous pour voir si vous n'avez pas eu un peu de chance...</p>
+        </div>
+        <ng-template #errorBlock>
+            <div *ngIf="question?.query?.rowCount === 0; else noDataError">
+                <p class="text-danger">Erreur de requête:</p>
+            </div>
+            <ng-template #noDataError>
+                <p class="text-danger">Votre requête a retourné un mauvais résultat:</p>
+            </ng-template>
+        </ng-template>
+        <div *ngIf="question.query?.sql==='';else notEmptyErrors">
+            <p class="text-danger">Requête vide</p>
+        </div>
+        <ng-template #notEmptyErrors>
+            <ng-container *ngFor="let e of question.query?.errors">
+                <li class="text-danger">{{e}}</li>
+            </ng-container>
+        </ng-template>
+    <div *ngIf="question?.query?.rowCount">
+        <p class="text">{{question.query?.rowCount}} lignes</p>
+    </div>
+    <ng-container *ngIf="question?.query">
+        <table mat-table [dataSource]="dataSource">
+          <ng-container *ngFor="let column of question?.query?.columns; index as i" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+            <td mat-cell *matCellDef="let element">{{element[i]}}</td>
+          </ng-container>
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </ng-container>
+    </ng-container>
+</div>
+
+
+<div *ngIf="solutionVisible || (question?.query?.errors?.length ===0 && !question.quiz?.isTest)">
+    <ng-container *ngFor="let s of question?.solutions; index as i">
+        <p class="fw-bold">Solution {{ i + 1 }}</p>
+        <div class="text-success">
+        <div style="white-space: pre-line;">{{ s.sql }}</div>
+        </div>
+    </ng-container>
+</div>
+</div>
