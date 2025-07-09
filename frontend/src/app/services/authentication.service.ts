@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { User } from '../models/user';
 import { plainToClass } from 'class-transformer';
 import { Observable } from 'rxjs';
+import { Role } from '../models/user';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -24,6 +25,10 @@ export class AuthenticationService {
             .pipe(map(user => {
                 user = plainToClass(User, user);
                 // login successful if there's a jwt token in the response
+                if (typeof user.role === 'string') {
+                    if (user.role === 'Teacher') user.role = Role.Teacher;
+                    else if (user.role === 'Student') user.role = Role.Student;
+                }
                 if (user && user.token) {
                     // store user details and jwt token in local storage to keep user logged in between page refreshes
                     sessionStorage.setItem('currentUser', JSON.stringify(user));

@@ -32,20 +32,20 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
+                        request.getPseudo(),
                         request.getPassword()
                 )
         );
 
-        User user = userRepository.findByUsername(request.getUsername())
+        User user = userRepository.findByPseudo(request.getPseudo())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getPseudo());
         String token = jwtService.generateToken(userDetails);
 
         return new AuthenticationResponse(
                 token,
-                user.getUsername(),
+                user.getPseudo(),
                 user.getEmail(),
                 user.getRole(),
                 user.getId()

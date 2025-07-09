@@ -22,32 +22,32 @@ public class DataInitializationService implements CommandLineRunner {
         if (userRepository.count() == 0) {
             // Student user
             User student = new User();
-            student.setUsername("student");
+            student.setPseudo("student");
             student.setPassword(passwordEncoder.encode("password"));
             student.setEmail("student@sqltrainer.com");
-            student.setRole(User.Role.STUDENT);
+            student.setRole(User.Role.Student);
             userRepository.save(student);
 
             // Teacher user
             User teacher = new User();
-            teacher.setUsername("teacher");
+            teacher.setPseudo("teacher");
             teacher.setPassword(passwordEncoder.encode("password"));
             teacher.setEmail("teacher@sqltrainer.com");
-            teacher.setRole(User.Role.TEACHER);
+            teacher.setRole(User.Role.Teacher);
             userRepository.save(teacher);
 
             // Admin user
             User admin = new User();
-            admin.setUsername("admin");
+            admin.setPseudo("admin");
             admin.setPassword(passwordEncoder.encode("password"));
             admin.setEmail("admin@sqltrainer.com");
-            admin.setRole(User.Role.ADMIN);
+            admin.setRole(User.Role.Admin);
             userRepository.save(admin);
 
             System.out.println("Sample users created:");
-            System.out.println("Student: username=student, password=password");
-            System.out.println("Teacher: username=teacher, password=password");
-            System.out.println("Admin: username=admin, password=password");
+            System.out.println("Student: pseudo=student, password=password");
+            System.out.println("Teacher: pseudo=teacher, password=password");
+            System.out.println("Admin: pseudo=admin, password=password");
         }
     }
 }

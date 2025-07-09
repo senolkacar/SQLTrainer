@@ -4,7 +4,7 @@ import com.senolkacar.sqltrainer.entity.User;
 
 public class AuthenticationResponse {
     private String token;
-    private String username;
+    private String pseudo;
     private String email;
     private User.Role role;
     private Long userId;
@@ -12,9 +12,9 @@ public class AuthenticationResponse {
     // Constructors
     public AuthenticationResponse() {}
 
-    public AuthenticationResponse(String token, String username, String email, User.Role role, Long userId) {
+    public AuthenticationResponse(String token, String pseudo, String email, User.Role role, Long userId) {
         this.token = token;
-        this.username = username;
+        this.pseudo = pseudo;
         this.email = email;
         this.role = role;
         this.userId = userId;
@@ -29,12 +29,12 @@ public class AuthenticationResponse {
         this.token = token;
     }
 
-    public String getUsername() {
-        return username;
+    public String getPseudo() {
+        return pseudo;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
     }
 
     public String getEmail() {

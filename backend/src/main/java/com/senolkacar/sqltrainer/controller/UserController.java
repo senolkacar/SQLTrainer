@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/members")
+@RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
-public class MemberController {
+public class UserController {
 
     @Autowired
     private AuthenticationService authenticationService;

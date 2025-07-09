@@ -9,7 +9,7 @@ import { routes } from './app.routes';
 import { jwtInterceptor } from './interceptors/jwt.interceptor';
 
 export function getBaseUrl() {
-  return document.getElementsByTagName('base')[0].href;
+  return "http://localhost:8080/"
 }
 
 export const appConfig: ApplicationConfig = {

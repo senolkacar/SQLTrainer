@@ -11,7 +11,7 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
+    private String pseudo;
 
     @Column(nullable = false)
     private String password;
@@ -20,13 +20,13 @@ public class User {
     private String email;
 
     @Enumerated(EnumType.STRING)
-    private Role role = Role.STUDENT;
+    private Role role = Role.Student;
 
     // Constructors
     public User() {}
 
-    public User(String username, String password, String email, Role role) {
-        this.username = username;
+    public User(String pseudo, String password, String email, Role role) {
+        this.pseudo = pseudo;
         this.password = password;
         this.email = email;
         this.role = role;
@@ -41,12 +41,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getPseudo() {
+        return pseudo;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
     }
 
     public String getPassword() {
@@ -74,6 +74,6 @@ public class User {
     }
 
     public enum Role {
-        STUDENT, TEACHER, ADMIN
+        Student, Teacher, Admin
     }
 }

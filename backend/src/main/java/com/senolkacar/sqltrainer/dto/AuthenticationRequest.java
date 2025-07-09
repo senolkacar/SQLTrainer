@@ -1,24 +1,24 @@
 package com.senolkacar.sqltrainer.dto;
 
 public class AuthenticationRequest {
-    private String username;
+    private String pseudo;
     private String password;
 
     // Constructors
     public AuthenticationRequest() {}
 
-    public AuthenticationRequest(String username, String password) {
-        this.username = username;
+    public AuthenticationRequest(String pseudo, String password) {
+        this.pseudo = pseudo;
         this.password = password;
     }
 
     // Getters and Setters
-    public String getUsername() {
-        return username;
+    public String getPseudo() {
+        return pseudo;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
     }
 
     public String getPassword() {
