@@ -1,18 +1,19 @@
 package com.senolkacar.sqltrainer.dto;
 
+import com.senolkacar.sqltrainer.entity.Role;
 import com.senolkacar.sqltrainer.entity.User;
 
 public class AuthenticationResponse {
     private String token;
     private String pseudo;
     private String email;
-    private User.Role role;
+    private Role role;
     private Long userId;
 
     // Constructors
     public AuthenticationResponse() {}
 
-    public AuthenticationResponse(String token, String pseudo, String email, User.Role role, Long userId) {
+    public AuthenticationResponse(String token, String pseudo, String email, Role role, Long userId) {
         this.token = token;
         this.pseudo = pseudo;
         this.email = email;
@@ -45,12 +46,8 @@ public class AuthenticationResponse {
         this.email = email;
     }
 
-    public User.Role getRole() {
+    public Role getRole() {
         return role;
-    }
-
-    public void setRole(User.Role role) {
-        this.role = role;
     }
 
     public Long getUserId() {

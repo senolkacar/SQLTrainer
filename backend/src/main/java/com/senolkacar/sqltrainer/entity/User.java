@@ -1,16 +1,17 @@
 package com.senolkacar.sqltrainer.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.Period;
 
-@Entity
-@Table(name = "users")
-public class User {
+@MappedSuperclass
+public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String pseudo;
 
     @Column(nullable = false)
@@ -19,20 +20,19 @@ public class User {
     @Column(nullable = false)
     private String email;
 
+    private String lastName;
+
+    private String firstName;
+
+    private LocalDate birthDate;
+
     @Enumerated(EnumType.STRING)
-    private Role role = Role.Student;
+    @Column(nullable = false)
+    private Role role;
 
-    // Constructors
-    public User() {}
+    @Transient
+    private String token;
 
-    public User(String pseudo, String password, String email, Role role) {
-        this.pseudo = pseudo;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-    }
-
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -65,6 +65,30 @@ public class User {
         this.email = email;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -73,7 +97,24 @@ public class User {
         this.role = role;
     }
 
-    public enum Role {
-        Student, Teacher, Admin
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    @Transient
+    public Integer getAge() {
+        if (birthDate == null) {
+            return null;
+        }
+        LocalDate today = LocalDate.now();
+        int age = Period.between(birthDate, today).getYears();
+        if (birthDate.plusYears(age).isAfter(today)) {
+            age--;
+        }
+        return age;
     }
 }
