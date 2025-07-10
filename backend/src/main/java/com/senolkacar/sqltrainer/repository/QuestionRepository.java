@@ -27,4 +27,11 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
            "WHERE q.quiz.id = :quizId AND q.order > :order " +
            "ORDER BY q.order ASC")
     Optional<Integer> findNextQuestionId(@Param("quizId") Long quizId, @Param("order") Integer order);
+
+    @Query("SELECT q FROM Question q " +
+            "JOIN FETCH q.quiz quiz " +
+            "JOIN FETCH quiz.database " +
+            "LEFT JOIN FETCH q.solutions " +
+            "WHERE q.id = :id")
+    Optional<Question> findByIdWithQuizAndSolutions(@Param("id") Integer id);
 }

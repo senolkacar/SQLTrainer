@@ -27,6 +27,9 @@ public class Answer {
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
+    @Column(name = "question_id", insertable = false, updatable = false)
+    private int questionId;
+
     // Getters and setters
 
     public Long getId() { return id; }
@@ -43,6 +46,14 @@ public class Answer {
 
     public Attempt getAttempt() { return attempt; }
     public void setAttempt(Attempt attempt) { this.attempt = attempt; }
+
+    public int getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(int questionId) {
+        this.questionId = questionId;
+    }
 
     public Question getQuestion() { return question; }
     public void setQuestion(Question question) { this.question = question; }

@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Service
@@ -81,8 +82,38 @@ public class QuestionService {
 
     // Placeholder methods for other functionality that might be needed
     public Query eval(EvalDTO evalDTO, String username) {
-        // Implementation would go here
-        return null;
+        if (evalDTO.getQuery() == null || evalDTO.getQuery().isEmpty()) {
+            throw new IllegalArgumentException("The query field is required.");
+            // Or return a ResponseEntity.badRequest().body("The query field is required.");
+        }
+
+        var user = userRepository.findByPseudo(username);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("User not found.");
+            // Or return a ResponseEntity.badRequest().build();
+        }
+
+        var questionOpt = questionRepository.findByIdWithQuizAndSolutions(evalDTO.getQuestionId());
+        var queryResult = questionOpt.get().eval(evalDTO.getQuery(), questionOpt.get().getQuiz().getDatabase().getName());
+        boolean isCorrect = queryResult.getErrors().isEmpty();
+        var attempt = attemptRepository.findLatestByStudentAndQuiz(user.get().getId(), questionOpt.get().getQuiz().getId())
+                .orElseThrow(() -> new IllegalArgumentException("No attempt found for user and quiz."));
+        if(attempt.getStart() == null) {
+            attempt.setStart(OffsetDateTime.now());
+            attemptRepository.save(attempt);
+        }
+
+        // Create and save new Answer
+        Answer answer = new Answer();
+        answer.setId(attempt.getId());
+        answer.setQuestionId(questionOpt.get().getId());
+        answer.setSql(evalDTO.getQuery());
+        answer.setTimestamp(OffsetDateTime.now());
+        answer.setCorrect(isCorrect);
+        answerRepository.save(answer);
+
+        return queryResult;
+
     }
 
     public Query getLastQueryResult(int id, String username) {
