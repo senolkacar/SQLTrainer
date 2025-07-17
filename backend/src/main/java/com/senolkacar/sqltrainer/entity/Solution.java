@@ -1,7 +1,10 @@
 package com.senolkacar.sqltrainer.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import com.senolkacar.sqltrainer.validation.UniqueSolutionOrder;
 
+@UniqueSolutionOrder
 @Entity
 @Table(name = "solutions")
 public class Solution {
@@ -13,6 +16,7 @@ public class Solution {
     private Integer order;
 
     @Column(columnDefinition = "TEXT", nullable = false)
+    @NotBlank(message = "The sql cannot be empty (excluding whitespace).")
     private String sql;
 
     @Column(name = "question_id", nullable = false)

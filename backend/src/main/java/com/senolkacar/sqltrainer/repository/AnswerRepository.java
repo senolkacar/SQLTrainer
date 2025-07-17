@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
@@ -14,4 +15,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     Optional<Answer> findLatestByAttemptAndQuestion(@Param("attemptId") Long attemptId, @Param("questionId") Integer questionId);
 
     boolean existsByAttemptIdAndQuestionId(Long attemptId, Integer questionId);
+
+    List<Answer> findAllByAttemptId(Long attemptId);
 }

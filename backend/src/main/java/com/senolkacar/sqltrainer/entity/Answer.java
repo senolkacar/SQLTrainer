@@ -1,4 +1,3 @@
-// File: backend/src/main/java/com/senolkacar/sqltrainer/entity/Answer.java
 package com.senolkacar.sqltrainer.entity;
 
 import jakarta.persistence.*;

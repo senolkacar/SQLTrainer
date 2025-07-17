@@ -1,11 +1,16 @@
 package com.senolkacar.sqltrainer.entity;
 
+import com.senolkacar.sqltrainer.validation.UniqueOrder;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+@UniqueOrder
 @Entity
 @Table(name = "questions")
 public class Question {
@@ -17,6 +22,8 @@ public class Question {
     private Integer order;
 
     @Column(columnDefinition = "TEXT", nullable = false)
+    @NotEmpty(message = "The body must not be empty.")
+    @Size(min = 2, message = "The body must have a minimum length of 2 characters.")
     private String body;
 
     @Column(name = "quiz_id")
@@ -26,6 +33,7 @@ public class Question {
     @JoinColumn(name = "quiz_id", insertable = false, updatable = false)
     private Quiz quiz;
 
+    @NotEmpty(message = "Solutions must not be empty.")
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Solution> solutions = new HashSet<>();
 

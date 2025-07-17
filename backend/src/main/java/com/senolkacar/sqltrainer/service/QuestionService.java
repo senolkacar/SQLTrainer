@@ -22,12 +22,14 @@ public class QuestionService {
     @Autowired
     private AnswerRepository answerRepository;
     @Autowired
+    private SolutionRepository solutionRepository;
+    @Autowired
     private ModelMapper modelMapper;
 
     public QuestionWithSolutionAnswerDTO getQuestionWithSolutionAnswer(int id, String username) {
         // Find user by username (pseudo)
         var user = userRepository.findByPseudo(username);
-        if (user == null) {
+        if (user.isEmpty()) {
             return null; // User not found
         }
 
@@ -119,5 +121,21 @@ public class QuestionService {
     public Query getLastQueryResult(int id, String username) {
         // Implementation would go here
         return null;
+    }
+
+    public boolean deleteQuestion(int id) {
+        if (questionRepository.existsById(id)) {
+            questionRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteSolution(int id) {
+        if (solutionRepository.existsById(id)) {
+            solutionRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

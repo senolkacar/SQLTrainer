@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
@@ -34,4 +35,16 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
             "LEFT JOIN FETCH q.solutions " +
             "WHERE q.id = :id")
     Optional<Question> findByIdWithQuizAndSolutions(@Param("id") Integer id);
+
+    @Query("DELETE FROM Question q WHERE q.id = :id")
+    void deleteById(@Param("id") Integer id);
+
+    @Query("SELECT TOP 1 *\n" +
+            "FROM Questions\n" +
+            "WHERE QuizId = @id")
+    Question findFirstByQuizId(@Param("id") Long quizId);
+
+    List<Question> findAllByQuizId(Long quizId);
+
+    boolean existsByQuizIdAndOrderAndIdNot(Integer quizId, Integer order, Integer id);
 }

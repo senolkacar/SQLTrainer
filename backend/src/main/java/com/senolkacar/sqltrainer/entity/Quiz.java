@@ -1,9 +1,15 @@
 package com.senolkacar.sqltrainer.entity;
 
+import com.senolkacar.sqltrainer.validation.UniqueQuizName;
+import com.senolkacar.sqltrainer.validation.ValidDateRange;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import java.time.OffsetDateTime;
 import java.util.*;
 
+@UniqueQuizName
+@ValidDateRange
 @Entity
 @Table(name = "quizzes")
 public class Quiz {
@@ -11,6 +17,8 @@ public class Quiz {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty(message = "The name must not be empty.")
+    @Size(min = 3, message = "The name must have a minimum length of 3 characters.")
     private String name;
 
     private String description;
@@ -26,6 +34,7 @@ public class Quiz {
     @JoinColumn(name = "database_id")
     private Database database;
 
+    @NotEmpty(message = "Questions must not be empty.")
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Question> questions = new HashSet<>();
 
